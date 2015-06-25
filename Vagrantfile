@@ -6,7 +6,9 @@ Vagrant.configure("2") do |config|
     config.vm.define "core#{num}" do |box|
       box.vm.box = "12.04-opscode"
       box.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-12.04_chef-provisionerless.box"
+
       box.vm.hostname = "core#{num}"
+      box.vm.network 'private_network', ip: "192.168.50.#{num + 10}", virtualbox__intnet: true
 
       box.vm.provider :virtualbox do |vm|
         vm.memory = 512
@@ -23,9 +25,8 @@ Vagrant.configure("2") do |config|
 
         # 2nd run - start zk and mesos master once the nodes are up and responding
         # Comment out the recipes above for run #2!
-        #chef.add_recipe "napalm::mesos_master"
-        #chef.add_recipe "napalm::zookeeper"
-        #chef.add_recipe "napalm::zookeeper_run"
+        # chef.add_recipe 'napalm::zookeeper_run'
+        # chef.add_recipe 'napalm::mesos_master'
       end
     end
   end
