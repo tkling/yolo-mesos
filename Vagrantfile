@@ -3,17 +3,17 @@
 
 Vagrant.configure("2") do |config|
   [1, 2, 3].each do |num|
-    config.vm.define "core#{num}" do
-      config.vm.box = "12.04-opscode"
-      config.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-12.04_chef-provisionerless.box"
-      config.vm.hostname = "core#{num}"
+    config.vm.define "core#{num}" do |box|
+      box.vm.box = "12.04-opscode"
+      box.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-12.04_chef-provisionerless.box"
+      box.vm.hostname = "core#{num}"
 
-      config.vm.provider :virtualbox do |vm|
+      box.vm.provider :virtualbox do |vm|
         vm.memory = 512
         vm.cpus = 2
       end
 
-      config.vm.provision :chef_solo do |chef|
+      box.vm.provision :chef_solo do |chef|
         chef.cookbooks_path = "./cookbook"
         chef.json = { 'zk_server_id' => num }
 
