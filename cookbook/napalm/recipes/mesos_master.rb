@@ -20,4 +20,3 @@ execute <<-EOH
     --volumes-from mesos-workdir \
     boritzio/docker-mesos-master
 EOH
-

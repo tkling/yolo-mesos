@@ -1,13 +1,3 @@
-#
-# Cookbook Name:: napalm
-# Recipe:: default
-#
-# Copyright (C) 2015 YOUR_NAME
-#
-# All rights reserved - Do Not Redistribute
-#
-
-
 bash "setup and install docker" do
   code "sed -i 's/^GRUB_CMDLINE_LINUX=\"\"/GRUB_CMDLINE_LINUX=\"cgroup_enable=memory swapaccount=1\"/' /etc/default/grub && \
         LVM_SUPPRESS_FD_WARNINGS=true update-grub && \
