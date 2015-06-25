@@ -2,13 +2,38 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  # All Vagrant configuration is done here. The most common configuration
-  # options are documented and commented below. For a complete reference,
-  # please see the online documentation at vagrantup.com.
+  [1, 2, 3].each do |num|
+    config.vm.define "core#{num}" do
+      config.vm.box = "12.04-opscode"
+      config.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-12.04_chef-provisionerless.box"
+      config.vm.hostname = "core#{num}"
+
+      config.vm.provider :virtualbox do |vm|
+        vm.memory = 512
+        vm.cpus = 2
+      end
+
+      config.vm.provision :chef_solo do |chef|
+        chef.cookbooks_path = "./cookbook"
+        chef.json = { 'zk_server_id' => num }
+
+        # 1st run - setup
+        chef.add_recipe "napalm"
+        chef.add_recipe "napalm::zookeeper_setup"
+
+        # 2nd run - start zk and mesos master once the nodes are up and responding
+        # Comment out the recipes above for run #2!
+        #chef.add_recipe "napalm::mesos_master"
+        #chef.add_recipe "napalm::zookeeper"
+        #chef.add_recipe "napalm::zookeeper_run"
+      end
+    end
+  end
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "12.04-omnibus"
-  config.vm.hostname = "zookeeper-master"
+  #  config.vm.box = "12.04-opscode"
+  #  config.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-12.04_chef-provisionerless.box"
+  #  config.vm.hostname = "base"
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
   # config.vm.box_url = "http://domain.com/path/to/above.box"
@@ -75,16 +100,16 @@ Vagrant.configure("2") do |config|
   # path, and data_bags path (all relative to this Vagrantfile), and adding
   # some recipes and/or roles.
   #
-  config.vm.provision :chef_solo do |chef|
-    chef.cookbooks_path = "./cookbook"
-  #   chef.roles_path = "../my-recipes/roles"
-  #   chef.data_bags_path = "../my-recipes/data_bags"
-    chef.add_recipe "napalm"
-  #   chef.add_role "web"
-
-  #   # You may also specify custom JSON attributes:
-  #   chef.json = { :mysql_password => "foo" }
-  end
+  # config.vm.provision :chef_solo do |chef|
+  #   chef.cookbooks_path = "./cookbook"
+  # #   chef.roles_path = "../my-recipes/roles"
+  # #   chef.data_bags_path = "../my-recipes/data_bags"
+  #   chef.add_recipe "napalm"
+  # #   chef.add_role "web"
+  #
+  # #   # You may also specify custom JSON attributes:
+  # #   chef.json = { :mysql_password => "foo" }
+  # end
 
   # Enable provisioning with chef server, specifying the chef server URL,
   # and the path to the validation key (relative to this Vagrantfile).
