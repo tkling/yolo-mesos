@@ -4,8 +4,9 @@ execute <<-EOH
     --name zookeeper \
     -p 2181:2181 -p 2888:2888 -p 3888:3888 \
     -e HOSTNAME=`hostname` \
-    -e HOSTS=core1,core2,core3 \
+    -e HOSTS=192.168.50.11,192.168.50.12,192.168.50.13 \
     -m 2g \
+    -d \
     --volumes-from zookeeper-data \
     --volumes-from zookeeper-data-log boritzio/docker-zookeeper
 EOH

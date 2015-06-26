@@ -16,6 +16,7 @@ Vagrant.configure("2") do |config|
       end
 
       box.vm.provision :chef_solo do |chef|
+        chef.log_level = :debug
         chef.cookbooks_path = "./cookbook"
         chef.json = { 'zk_server_id' => num }
 
@@ -27,6 +28,7 @@ Vagrant.configure("2") do |config|
         # Comment out the recipes above for run #2!
         # chef.add_recipe 'napalm::zookeeper_run'
         # chef.add_recipe 'napalm::mesos_master'
+        # chef.add_recipe 'napalm::marathon'
       end
     end
   end
